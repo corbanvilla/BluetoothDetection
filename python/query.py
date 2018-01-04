@@ -7,8 +7,8 @@
 #database interfacing
 import sqlite3
 #pytables
-from tables import *
-#import numpy
+import tables
+import numpy
 
 #Main function to be called elsewhere
 def queryDatabase(databasePath, sqlCommand):
@@ -29,9 +29,9 @@ def queryDatabase(databasePath, sqlCommand):
             lastSeen = row[2]
             print ("name=%s, first_seen=%s, last_seen=%s" \
             % (name, firstSeen, lastSeen))
-            #final_result = [list(i) for i in result]
-            #print ("Row[0] is: " + str(row[0]))
-            #print ("results is: " + str(results[0]))
+
+
+
     except Exception as e:
         print("Unable to query database: " + str(e))
     conn.close()
