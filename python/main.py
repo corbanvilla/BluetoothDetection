@@ -13,5 +13,4 @@ import timestamps
 def main():
     results = query.queryDatabase()
     timestamps.fetchTimes(results)
-
 main()

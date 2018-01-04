@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 #author - Animcogn
-#purpose - connect to database, send query, then nest results in lists.
+#purpose - take database query, regex for timestamps, calculate time balances
 #created - 1/4/2018
 #last edit - 1/4/2018
 
@@ -10,14 +10,16 @@ from tables import *
 from numpy import *
 #timestamps
 import subprocess
-import datetime
+from datetime import datetime
 #regular expressions
 import re
 
 #Ask bash for exact times
 def fetchDate():
-    current_date = subprocess.check_output("date +'%Y-%m-%d'", shell=True).decode().strip()
-    current_time = subprocess.check_output("date +'%H-%M-%S'", shell=True).decode().strip()
+    current_date = subprocess.check_output\
+    ("date +'%Y-%m-%d'", shell=True).decode().strip()
+    current_time = subprocess.check_output\
+    ("date +'%H-%M-%S'", shell=True).decode().strip()
     return current_date, current_time;
 
 #Pytables to store information for easy access
@@ -50,3 +52,16 @@ def fetchTimes(results):
         rg = re.compile(re1+re2,re.IGNORECASE|re.DOTALL)
         m = rg.search(lastSeen)
         print(m.group(1))
+
+def timeDifference(timestamp1, timestamp2):
+    t1 = datetime.strptime(timestamp1, "%Y-%m-%d %H:%M:%S")
+    t2 = datetime.strptime(timestamp2, "%Y-%m-%d %H:%M:%S")
+
+    #Subtrack times, convert to seconds
+    difference = (t2 - t1)
+    hours = round(difference.seconds / 3600, 2)
+    days = (difference.days)
+    return(days, hours)
+
+x, y = timeDifference("2018-01-03 12:17:04", "2018-01-04 15:44:01")
+print(str(x) + " " + str(y))
