@@ -6,15 +6,12 @@
 #last edit - 1/3/2018
 
 #query database
-from query import queryDatabase
-#import timestamps
-
-#Defininitions
-databasePath = '/home/animcogn/blue_hydra.db'
-sqlCommand = "SELECT name, created_at, updated_at FROM \
-              blue_hydra_devices WHERE status = 'online';"
+import query
+#extract timestamps from query
+import timestamps
 
 def main():
-    queryDatabase(databasePath, sqlCommand)
+    results = query.queryDatabase()
+    timestamps.fetchTimes(results)
 
 main()
