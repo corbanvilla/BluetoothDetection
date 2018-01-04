@@ -9,7 +9,7 @@ from query import queryDatabase
 #import timestamps
 
 #Defininitions
-databasePath = '/home/pi/blue_hydra/bin/blue_hydra.db'
+databasePath = '/home/animcogn/blue_hydra.db'
 sqlCommand = "SELECT name, created_at, updated_at FROM \
               blue_hydra_devices WHERE status = 'online';"
 
