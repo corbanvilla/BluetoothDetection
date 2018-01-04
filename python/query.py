@@ -7,8 +7,14 @@
 #database interfacing
 import sqlite3
 #pytables
-import tables
-import numpy
+from tables import *
+from numpy import *
+
+#Pytables to store information for easy access
+class NearbyDevices(IsDescription):
+    name        = String()
+    first_seen  = String()
+    last_seen   = String()
 
 #Main function to be called elsewhere
 def queryDatabase(databasePath, sqlCommand):
@@ -19,12 +25,6 @@ def queryDatabase(databasePath, sqlCommand):
         c = conn.cursor()
     except Exception as e:
         print("Unable to connect to database: " + str(e))
-
-    #Pytables to store information for easy access
-    class NearbyDevices(IsDescription):
-        name        = String()
-        first_seen  = String()
-        last_seen   = String()
 
     #Query for data, then store in list
     try:
