@@ -14,10 +14,17 @@ import numpy
 def queryDatabase(databasePath, sqlCommand):
     #Connect to database
     try:
+
         conn = sqlite3.connect(databasePath)
         c = conn.cursor()
     except Exception as e:
         print("Unable to connect to database: " + str(e))
+
+    #Pytables to store information for easy access
+    class NearbyDevices(IsDescription):
+        name        = String()
+        first_seen  = String()
+        last_seen   = String()
 
     #Query for data, then store in list
     try:
@@ -27,13 +34,13 @@ def queryDatabase(databasePath, sqlCommand):
             name = row[0]
             firstSeen = row[1]
             lastSeen = row[2]
-            print ("name=%s, first_seen=%s, last_seen=%s" \
+            print ("name=%s, first seen=%s, last seen=%s" \
             % (name, firstSeen, lastSeen))
 
 
 
     except Exception as e:
         print("Unable to query database: " + str(e))
-    conn.close()
+    #conn.close()
 
 #def
