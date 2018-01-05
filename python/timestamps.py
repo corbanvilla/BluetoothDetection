@@ -22,6 +22,7 @@ def fetchDate():
     ("date +'%H-%M-%S'", shell=True).decode().strip()
     return current_date, current_time;
 
+#####WORK IN PROGRESS#####
 #Pytables to store information for easy access
 #class NearbyDevices(IsDescription):
 #    name        = StringCol(16)
@@ -34,6 +35,7 @@ def fetchDate():
 #print(h5file)
 
 #Smartwatch = table.row
+#####WORK IN PROGRESS#####
 
 #Grab query, filter times, and print
 def fetchTimes(results):

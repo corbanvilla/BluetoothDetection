@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 #author - Animcogn
-#purpose - connect to database, send query, then return results.
+#purpose - connect to blue_hydra database, send query, then return results.
 #created - 1/3/2018
 #last edit - 1/4/2018
 
