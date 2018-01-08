@@ -19,17 +19,14 @@ def queryDatabase():
     try:
         conn = sqlite3.connect(databasePath)
         c = conn.cursor()
+
+        #Query for data, then store in list
+        try:
+            c.execute(sqlCommand)
+            results = c.fetchall()
+            return results
+            conn.close() #Close connection with database
+        except Exception as e:
+            print("Unable to query database: " + str(e))
     except Exception as e:
         print("Unable to connect to database: " + str(e))
-
-    #Query for data, then store in list
-    try:
-        c.execute(sqlCommand)
-        results = c.fetchall()
-        return results
-
-    except Exception as e:
-        print("Unable to query database: " + str(e))
-
-    #Close connection with database
-    conn.close()

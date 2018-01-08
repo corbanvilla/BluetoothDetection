@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 
 #author - Animcogn
-#purpose - take database query, regex for timestamps, calculate time balances
+#purpose - take database query, regex for timestamps, calculate time imbalances
 #created - 1/4/2018
-#last edit - 1/4/2018
+#last edit - 1/5/2018
 
 #pytables
 from tables import *
@@ -14,56 +14,79 @@ from datetime import datetime
 #regular expressions
 import re
 
+#Grab query, filter times, and print
+def fetchTimes(results):
+    for row in results:
+        name = row[0]
+        first_seen = row[1]
+        last_seen = row[2]
+        print ("name=%s, first seen=%s, last seen=%s" \
+        % (name, first_seen, last_seen))
+
+        first_seen = regexStamp(first_seen)
+        last_seen = regexStamp(last_seen)
+        print(algorithm(first_seen, last_seen, fetchDate()))
+
 #Ask bash for exact times
 def fetchDate():
     current_date = subprocess.check_output\
     ("date +'%Y-%m-%d'", shell=True).decode().strip()
     current_time = subprocess.check_output\
-    ("date +'%H-%M-%S'", shell=True).decode().strip()
-    return current_date, current_time;
+    ("date +'%H:%M:%S'", shell=True).decode().strip()
+    return (current_date + " " + current_time)
 
-#####WORK IN PROGRESS#####
-#Pytables to store information for easy access
-#class NearbyDevices(IsDescription):
-#    name        = StringCol(16)
-#    first_seen  = StringCol(16)
-#    last_seen   = StringCol(16)
+def regexStamp(string):
+    device_date = re.match('.+?(?=T)', string)
+    device_date = (str(device_date.group(0)))
 
-#h5file = open_file("nearby_devices", mode="w", title="storage of devices found")
-#group = h5file.create_group("/", "devices", "Device information")
-#table = h5file.create_table(group, 'readout', NearbyDevices, "Bluetooth Devices")
-#print(h5file)
+    re1='.*?'
+    re2='((?:(?:[0-1][0-9])|(?:[2][0-3])|(?:[0-9])):(?:[0-5][0-9])(?::[0-5][0-9])?(?:\\s?(?:am|AM|pm|PM))?)'
+    rg = re.compile(re1+re2,re.IGNORECASE|re.DOTALL)
+    device_time = rg.search(string)
+    device_time = (device_time.group(1))
 
-#Smartwatch = table.row
-#####WORK IN PROGRESS#####
+    timestamp = (device_date + " " + device_time)
+    return(timestamp)
 
-#Grab query, filter times, and print
-def fetchTimes(results):
-    for row in results:
-        name = row[0]
-        firstSeen = row[1]
-        lastSeen = row[2]
-        print ("name=%s, first seen=%s, last seen=%s" \
-        % (name, firstSeen, lastSeen))
-
-        device_date = re.match('.+?(?=T)', lastSeen)
-        print(str(device_date.group(0)))
-
-        re1='.*?'
-        re2='((?:(?:[0-1][0-9])|(?:[2][0-3])|(?:[0-9])):(?:[0-5][0-9])(?::[0-5][0-9])?(?:\\s?(?:am|AM|pm|PM))?)'
-        rg = re.compile(re1+re2,re.IGNORECASE|re.DOTALL)
-        m = rg.search(lastSeen)
-        print(m.group(1))
-
-def timeDifference(timestamp1, timestamp2):
+#timestamp 1 - before | timestamp 2 - after
+def timeDifference(timestamp1, timestamp2, humanReadable=True):
     t1 = datetime.strptime(timestamp1, "%Y-%m-%d %H:%M:%S")
     t2 = datetime.strptime(timestamp2, "%Y-%m-%d %H:%M:%S")
 
-    #Subtrack times, convert to seconds
+    #Subtrack times
     difference = (t2 - t1)
-    hours = round(difference.seconds / 3600, 2)
-    days = (difference.days)
-    return(days, hours)
+    #Convert to days, hours
+    if humanReadable:
+        hours = round(difference.seconds / 3600, 2)
+        days = (difference.days)
+        return(days, hours)
+    else:
+        #Convert to minutes and combine days and seconds
+        minutes = round(((difference.days * 24 * 60) + difference.seconds / 60), 2)
+        return(minutes)
 
-x, y = timeDifference("2018-01-03 12:17:04", "2018-01-04 15:44:01")
-print(str(x) + " " + str(y))
+def algorithm(first_seen, last_seen, current_time):
+    first_to_last = (timeDifference(first_seen, last_seen, False))
+    last_to_current = (timeDifference(last_seen, current_time, False))
+    print(first_to_last)
+    print(last_to_current)
+
+    if first_to_last > 144 and last_to_current < 60: # <--- change these values to adjust detection
+        alert = 4
+        return(alert)
+
+    elif first_to_last > 180 and last_to_current < 60:
+        alert = 3
+        return(alert)
+
+    elif first_to_last > 60 and last_to_current < 60:
+        alert = 2
+        return(alert)
+
+    elif first_to_last > 15 and last_to_current < 60:
+        alert = 1
+        return(alert)
+
+    else:
+        alert = 0
+        return(alert)
