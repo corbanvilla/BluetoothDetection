@@ -10,8 +10,8 @@ import sqlite3
 
 #Defininitions
 databasePath = '/home/animcogn/blue_hydra.db'
-sqlCommand = "SELECT uuid, name, vendor, created_at, updated_at FROM \
-              blue_hydra_devices WHERE status = 'online';"
+sqlCommand = "SELECT uuid, name, vendor, created_at, updated_at \
+              FROM blue_hydra_devices WHERE status = 'online';"
 
 #Main function to be called elsewhere
 def queryDatabase():
