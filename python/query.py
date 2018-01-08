@@ -3,7 +3,7 @@
 #author - Animcogn
 #purpose - connect to blue_hydra database, send query, then return results.
 #created - 1/3/2018
-#last edit - 1/4/2018
+#last edit - 1/8/2018
 
 #database interfacing
 import sqlite3
@@ -11,7 +11,7 @@ import sqlite3
 #Defininitions
 databasePath = '/home/animcogn/blue_hydra.db'
 sqlCommand = "SELECT uuid, name, vendor, created_at, updated_at \
-              FROM blue_hydra_devices WHERE status = 'online';"
+              FROM blue_hydra_devices WHERE status = 'online';" #Query for data from blue_hydra
 
 #Main function to be called elsewhere
 def queryDatabase():

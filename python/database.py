@@ -5,7 +5,7 @@
 #          later in project, this list will contain suspicion rating,
 #          when it was first seen, and last seen.
 #created - 1/5/2018
-#last edit - 1/5/2018
+#last edit - 1/8/2018
 
 #sqlite
 import sqlite3

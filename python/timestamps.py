@@ -3,7 +3,7 @@
 #author - Animcogn
 #purpose - take database query, regex for timestamps, calculate time imbalances
 #created - 1/4/2018
-#last edit - 1/5/2018
+#last edit - 1/8/2018
 
 #pytables
 from tables import *
@@ -24,7 +24,9 @@ def fetchTimes(results):
         first_seen = regexStamp(first_seen)
         last_seen = regexStamp(last_seen)
         rating = algorithm(first_seen, last_seen, fetchDate())
-        db.insertToDatabase([row[0], row[1], row[2], first_seen, last_seen, rating])
+
+        if rating >= 1: #filter out noise
+            db.insertToDatabase([row[0], row[1], row[2], first_seen, last_seen, rating])
 
 #Ask bash for exact times
 def fetchDate():
@@ -34,6 +36,7 @@ def fetchDate():
     ("date +'%H:%M:%S'", shell=True).decode().strip()
     return (current_date + " " + current_time)
 
+#sort for exact parts in timestamp for comparing
 def regexStamp(string):
     device_date = re.match('.+?(?=T)', string)
     device_date = (str(device_date.group(0)))
@@ -64,6 +67,7 @@ def timeDifference(timestamp1, timestamp2, humanReadable=True):
         minutes = round(((difference.days * 24 * 60) + difference.seconds / 60), 2)
         return(minutes)
 
+#decide threat rating by timestamps
 def algorithm(first_seen, last_seen, current_time): #need to tweak algorithm later in
     first_to_last = (timeDifference(first_seen, last_seen, False))
     last_to_current = (timeDifference(last_seen, current_time, False))
