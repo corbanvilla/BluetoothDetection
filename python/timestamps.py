@@ -13,19 +13,18 @@ import subprocess
 from datetime import datetime
 #regular expressions
 import re
+#database storing
+import database as db
 
 #Grab query, filter times, and print
 def fetchTimes(results):
     for row in results:
-        name = row[0]
-        first_seen = row[1]
-        last_seen = row[2]
-        print ("name=%s, first seen=%s, last seen=%s" \
-        % (name, first_seen, last_seen))
-
+        first_seen = row[3]
+        last_seen = row[4]
         first_seen = regexStamp(first_seen)
         last_seen = regexStamp(last_seen)
-        print(algorithm(first_seen, last_seen, fetchDate()))
+        rating = algorithm(first_seen, last_seen, fetchDate())
+        db.insertToDatabase([row[0], row[1], row[2], first_seen, last_seen, rating])
 
 #Ask bash for exact times
 def fetchDate():
@@ -65,11 +64,9 @@ def timeDifference(timestamp1, timestamp2, humanReadable=True):
         minutes = round(((difference.days * 24 * 60) + difference.seconds / 60), 2)
         return(minutes)
 
-def algorithm(first_seen, last_seen, current_time):
+def algorithm(first_seen, last_seen, current_time): #need to tweak algorithm later in
     first_to_last = (timeDifference(first_seen, last_seen, False))
     last_to_current = (timeDifference(last_seen, current_time, False))
-    print(first_to_last)
-    print(last_to_current)
 
     if first_to_last > 144 and last_to_current < 60: # <--- change these values to adjust detection
         alert = 4
