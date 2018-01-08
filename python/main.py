@@ -9,8 +9,11 @@
 import query
 #extract timestamps from query
 import timestamps
+#initialize and insert to database
+import database as db
 
 def main():
+    db.initiateDatabase()
     results = query.queryDatabase()
     timestamps.fetchTimes(results)
 main()
