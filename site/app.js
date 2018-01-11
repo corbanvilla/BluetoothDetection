@@ -9,7 +9,6 @@
 
 var express = require('express');
 var app = express();
-var fs = require('fs');
 var obj = {
     foo: "its me!",
     bar: "hello world"
@@ -27,14 +26,14 @@ app.get('/database', function(req, res) {
     // open the database
     let db = new sqlite3.Database('./suspicious_devices.db');
 
-    let sql = 'SELECT * FROM devices WHERE threat_rating >= 1';
+    let sql = 'SELECT * FROM devices WHERE threat_rating >= 1'; //<--- adjust this for false alarms
 
     db.all(sql, [], (err, rows) => {
       if (err) {
         throw err;
       }
      rows.forEach((row) => {
-        console.log(row);
+        console.log(JSON.stringify(row));
       });
 
     res.send(rows);
