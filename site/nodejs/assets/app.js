@@ -3,22 +3,10 @@
 //created - 1/8/2018
 //last edit - 1/8/2018
 
-//DISCLAIMER!!!!!
-//I've never written in node before, and my javascript experience is very limited :P
-//Plz no hate
-
 var express = require('express');
 var app = express();
-var obj = {
-    foo: "its me!",
-    bar: "hello world"
-};
 
 app.use(express.static('public'));
-
-app.get('/', function (req, res) {
-   res.send('Hello World');
-})
 
 app.get('/database', function(req, res) {
     const sqlite3 = require('sqlite3').verbose();
