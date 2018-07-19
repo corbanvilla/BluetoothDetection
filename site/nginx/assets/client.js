@@ -14,6 +14,7 @@ function initMap() {
         //Ajax
         $.get("database", function(data, status){
             (function drop() {
+              console.log(data);
               for (var i = 0; i < data.length; i++) {
                 addMarker(data[i].name, data[i].latitude, data[i].longitude, i * 400, i,
                     data[i].vendor, data[i].first_seen, data[i].last_seen, data[i].threat_rating);
